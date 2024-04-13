@@ -37,6 +37,11 @@ class Bloc<STATE : Any, ACTION : Any>(
 
     private val actionFlow = Channel<ACTION>()
 
+    /**
+     * flatMapConcat은 순차적인 상태 변환을 의도해서 사용한 건 맞지만
+     * 첫번째 액션이 오래걸리면 다른게 실행되지 않는 문제가 발생함
+     * 이러한 문제를 ActionTransformer로 해결
+     */
     fun start() {
         actionFlow.receiveAsFlow()
             .flatMapMerge { action -> transformAction(action) }
@@ -64,6 +69,9 @@ class Bloc<STATE : Any, ACTION : Any>(
             }
     }
 
+    /**
+     * 액션의 전달을 bloc에 위임하는 역할로 dispatch라는 이름을 붙임
+     */
     fun dispatch(action: ACTION) {
         scope.launch {
             actionFlow.send(action)

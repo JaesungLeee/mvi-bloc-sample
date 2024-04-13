@@ -7,6 +7,12 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.onStart
 
+/**
+ * Mapper가 MVI에서 설명하는 Reducer를 의미하는가
+ * Reducer 기존 State + Action 가지고 New State니까
+ *
+ * 맞음. 새로운 상태를 만들어내는 것에 초점을 둔다.
+ */
 class MainActionMapper(
     private val memberRepository: MockRepository,
 ) : ActionMapper<MainState, MainAction> {
@@ -17,6 +23,9 @@ class MainActionMapper(
         }
     }
 
+    /**
+     * clickButton의 인자로 들어가는 State는 현재 상태를 의미
+     */
     private fun clickButton(state: MainState, action: MainAction): Flow<MainState> =
         flow {
             val members = memberRepository.getMembers()

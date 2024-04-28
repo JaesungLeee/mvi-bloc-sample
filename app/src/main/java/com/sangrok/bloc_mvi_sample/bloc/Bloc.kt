@@ -26,6 +26,7 @@ class Bloc<STATE : Any, ACTION : Any>(
     initialState: STATE,
     private val actionTransformer: ActionTransformer<ACTION> = DefaultActionTransFormer(),
     private val actionMapper: ActionMapper<STATE, ACTION>,
+    // NetworkError나 전역적인 에러를 가지고 다이얼로그를 띄운다거나 그럴때 사용
     private val errorMapper: ErrorMapper<STATE, ACTION> = DefaultErrorMapper(),
     private val scope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
 ) {
@@ -44,8 +45,8 @@ class Bloc<STATE : Any, ACTION : Any>(
      */
     fun start() {
         actionFlow.receiveAsFlow()
-            .flatMapMerge { action -> transformAction(action) }
-            .flatMapConcat { action -> mapActionToState(action) }
+            .flatMapMerge { action -> transformAction(action) }  // Action을 받아 비동기적으로 다른 Action으로 변환
+            .flatMapConcat { action -> mapActionToState(action) }  // Action을 받아 동기적으로 State로 변환
             .filter { it.currentState != it.nextState }
             .onEach {
                 doOnTransition(it)

@@ -57,4 +57,28 @@ class MainActionTransformerTest {
         // CHECK
         Assert.assertEquals(expectAction, actualAction)
     }
+
+    @Test
+    fun `GIVEN 좋아요 상태가 false WHEN 메인 토글 클릭 시 THEN 좋아요 상태가 true로 변경된다`() = runTest {
+        // GIVEN
+        val givenMember = Member(
+            name = "JaesungLeee",
+            liked = false
+        )
+
+        // WHEN
+        val action = MainAction.ClickToggle(member = givenMember)
+        val actualAction = mainActionTransformer.transformActions(action = action).first()
+
+        // THEN
+        val expectAction = MainAction.SetMemberState(
+            member = givenMember.copy(
+                name = "JaesungLeee",
+                liked = givenMember.liked.not()
+            )
+        )
+
+        // CHECK
+        Assert.assertEquals(expectAction, actualAction)
+    }
 }

@@ -5,7 +5,6 @@ import com.sangrok.bloc_mvi_sample.repository.MockRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.flow.onStart
 
 /**

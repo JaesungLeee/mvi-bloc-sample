@@ -31,7 +31,7 @@ class BlocModule {
         return Bloc(
             initialState = MainState.INITIAL_STATE,
             actionMapper = MainActionMapper(memberRepository),
-            //actionTransformer = MainActionTransformer(memberRepository)
+            actionTransformer = MainActionTransformer(memberRepository)
         )
     }
 

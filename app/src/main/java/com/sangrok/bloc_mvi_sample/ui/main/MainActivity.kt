@@ -14,15 +14,18 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.Dialog
 import com.sangrok.bloc_mvi_sample.ui.theme.BlocmvisampleTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -46,12 +49,17 @@ fun MainScreen(
     state: MainState,
     onAction: (MainAction) -> Unit,
 ) {
+    val snackBarHostState = remember { SnackbarHostState() }
+
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
+        SnackbarHost(
+            hostState = snackBarHostState,
+            modifier = Modifier.align(Alignment.BottomCenter)
+        )
         when {
-
             state.isLoading -> {
                 CircularProgressIndicator()
             }
@@ -89,20 +97,17 @@ fun MainScreen(
                         items(state.members) { member ->
                             Row {
                                 Text(member.name, fontSize = 24.sp)
-                                Toggle(selected = member.liked, onSelectedChange = {
-                                    onAction(MainAction.ClickToggle(member))
-                                })
+                                Toggle(
+                                    selected = member.liked,
+                                    onSelectedChange = {
+                                        onAction(MainAction.ClickToggle(member))
+                                    }
+                                )
                             }
                         }
                     }
                 }
             }
-        }
-    }
-
-    if (state.errorDialogVisible) {
-        Dialog(onDismissRequest = { onAction(MainAction.DialogDismiss) }) {
-
         }
     }
 
